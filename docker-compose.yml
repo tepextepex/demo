@@ -1,0 +1,27 @@
+version: "3"
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    network_mode: "host"
+    command: ["python", "app.py", "--host=0.0.0.0"]
+    ports:
+      - "8888:5000"
+    volumes:
+      - ".:/app"
+      - "/tmp:/tmp"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:latest
+    network_mode: "host"
+    environment:
+      POSTGRES_PASSWORD: "${DB_PASS}"
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+
